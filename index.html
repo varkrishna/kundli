@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html>
+  <br>
+    <div class="left">
+        <div id="startButton" class="button" >
+        <button>Test camera and microphone Permissions</button> 
+        </div>
+        <h2>Preview</h2>
+        <video id="preview" width="160" height="120" autoplay muted></video>
+    </div>
+
+    <div class="right">
+        <div id="stopButton" class="button">
+        <button>stop</button>
+        </div>
+        <h2>Recording</h2>
+        <video id="recording" width="160" height="120" controls></video>
+    </div>
+
+    <script>
+    
+   
+
+    var preview = document.getElementById("preview");
+    var recording = document.getElementById("recording");
+    var startButton = document.getElementById("startButton");
+    var stopButton = document.getElementById("stopButton");
+    var downloadButton = document.getElementById("recording");
+    var logElement = document.getElementById("log");
+
+    var recordingTimeMS = 5000;
+
+
+  function log(msg) {
+        //logElement.innerHTML += msg + "\n";
+    }
+    function wait(delayInMS) {
+        return new Promise(resolve => setTimeout(resolve, delayInMS));
+    }
+
+    function startRecording(stream, lengthInMS) {
+        let recorder = new MediaRecorder(stream);
+        let data = [];
+
+        recorder.ondataavailable = event => data.push(event.data);
+        recorder.start();
+        log(recorder.state + " for " + (lengthInMS/1000) + " seconds...");
+
+        let stopped = new Promise((resolve, reject) => {
+        recorder.onstop = resolve;
+        recorder.onerror = event => reject(event.name);
+        });
+
+        let recorded = wait(lengthInMS).then(
+        () => recorder.state == "recording" && recorder.stop()
+        );
+
+        return Promise.all([
+            stopped,
+            recorded
+        ])
+        .then(() => data);
+    }
+
+    function stop(stream) {
+        stream.getTracks().forEach(track => track.stop());
+    }
+
+    startButton.addEventListener("click", function() {
+        navigator.mediaDevices.getUserMedia({
+            video: true,
+            audio: true
+        }).then(stream => {
+                preview.srcObject = stream;
+                downloadButton.href = stream;
+                preview.captureStream = preview.captureStream || preview.mozCaptureStream;
+                return new Promise(resolve => preview.onplaying = resolve);
+              }).then(() => startRecording(preview.captureStream(), recordingTimeMS))
+              .then (recordedChunks => {
+                let recordedBlob = new Blob(recordedChunks, { type: "video/webm" });
+                recording.src = URL.createObjectURL(recordedBlob);  
+                downloadButton.href = recording.src;
+                downloadButton.download = "RecordedVideo.webm";
+
+                log("Successfully recorded " + recordedBlob.size + " bytes of " +
+                    recordedBlob.type + " media.");
+              })
+              .catch(log);
+        }, false);
+
+
+        stopButton.addEventListener("click", function() {
+        stop(preview.srcObject);
+        }, false);
+
+    </script>
+   
+   </br>
+   
+   <hr style="width:100%;text-align:left;margin-left:0:height:30px">
+   <br>
+   
+        <div class="left1">
+        <div id="startButton1" class="button" >
+        <button>Test Camera Permission</button> 
+        </div>
+        <h2>Preview</h2>
+        <video id="preview1" width="160" height="120" autoplay muted></video>
+      </div>
+
+    <div class="right1">
+        <div id="stopButton1" class="button">
+        <button>stop</button>
+        </div>
+        <h2>Recording</h2>
+        <video id="recording1" width="160" height="120" controls></video>
+    </div>
+    </br>
+    
+     <script>
+
+  var preview1 = document.getElementById("preview1");
+    var recording1 = document.getElementById("recording1");
+     var startButton1 = document.getElementById("startButton1");
+     var stopButton1 = document.getElementById("stopButton1");
+     var downloadButton1 = document.getElementById("recording1");
+    
+     var recordingTimeMS1 = 5000;
+    function wait1(delayInMS) {
+        return new Promise(resolve => setTimeout(resolve, delayInMS));
+    }
+
+    function startRecording1(stream, lengthInMS) {
+        let recorder = new MediaRecorder(stream);
+        let data = [];
+
+        recorder.ondataavailable = event => data.push(event.data);
+        recorder.start();
+        log(recorder.state + " for " + (lengthInMS/1000) + " seconds...");
+
+        let stopped = new Promise((resolve, reject) => {
+        recorder.onstop = resolve;
+        recorder.onerror = event => reject(event.name);
+        });
+
+        let recorded = wait(lengthInMS).then(
+        () => recorder.state == "recording" && recorder.stop()
+        );
+
+        return Promise.all([
+            stopped,
+            recorded
+        ])
+        .then(() => data);
+    }
+     function log1(msg) {
+        //logElement.innerHTML += msg + "\n";
+    }
+
+    function stop1(stream) {
+        stream.getTracks().forEach(track => track.stop());
+    }
+
+    startButton1.addEventListener("click", function() {
+    
+        navigator.mediaDevices.getUserMedia({
+            video: true,
+            audio: false
+        }).then(stream => {
+                preview1.srcObject = stream;
+                downloadButton1.href = stream;
+                preview1.captureStream = preview1.captureStream || preview1.mozCaptureStream;
+                return new Promise(resolve => preview1.onplaying = resolve);
+              }).then(() => startRecording1(preview1.captureStream(), recordingTimeMS1))
+              .then (recordedChunks => {
+                let recordedBlob = new Blob(recordedChunks, { type: "video/webm" });
+                recording1.src = URL.createObjectURL(recordedBlob);  
+                downloadButton1.href = recording.src;
+                downloadButton1.download = "RecordedVideo.webm";
+
+                log1("Successfully recorded " + recordedBlob.size + " bytes of " +
+                    recordedBlob.type + " media.");
+              })
+              .catch(log);
+        }, false);
+
+
+        stopButton1.addEventListener("click", function() {
+        stop1(preview1.srcObject);
+        }, false);
+
+    </script>
+    
+    <br>
+    
+     <hr style="width:100%;text-align:left;margin-left:0:height:30px">
+     
+      
+   
+         <br>
+        <div class="left2">
+        <div id="startButton2" class="button" >
+        <button>Test microphone Permission</button> 
+        </div>
+         <video id="preview2" width="160" height="120" autoplay muted></video>
+      </div>
+        
+        <br>
+
+    <div class="right2">
+        <div id="stopButton2" class="button">
+        <button>stop</button>
+        </div>
+        <h2>Recording</h2>
+        <video id="recording2" width="160" height="120" controls></video>
+    </div>
+    </br>
+  
+    </br>
+    
+     <script>
+
+     var preview2 = document.getElementById("preview2");
+     var recording2 = document.getElementById("recording2");
+     var startButton2 = document.getElementById("startButton2");
+     var stopButton2 = document.getElementById("stopButton2");
+     var downloadButton2 = document.getElementById("recording2");
+    
+     var recordingTimeMS2 = 5000;
+
+
+
+    function wait2(delayInMS) {
+        return new Promise(resolve => setTimeout(resolve, delayInMS));
+    }
+
+    function startRecording2(stream, lengthInMS) {
+    
+        let recorder = new MediaRecorder(stream);
+        let data = [];
+
+        recorder.ondataavailable = event => data.push(event.data);
+        recorder.start();
+        log(recorder.state + " for " + (lengthInMS/1000) + " seconds...");
+
+        let stopped = new Promise((resolve, reject) => {
+        recorder.onstop = resolve;
+        recorder.onerror = event => reject(event.name);
+        });
+
+        let recorded = wait(lengthInMS).then(
+        () => recorder.state == "recording" && recorder.stop()
+        );
+
+        return Promise.all([
+            stopped,
+            recorded
+        ])
+        .then(() => data);
+    }
+     function log2(msg) {
+        //logElement.innerHTML += msg + "\n";
+    }
+
+    function stop2(stream) {
+        stream.getTracks().forEach(track => track.stop());
+    }
+
+    startButton2.addEventListener("click", function() {
+        navigator.mediaDevices.getUserMedia({
+            video: false,
+            audio: true
+        }).then(stream => {
+                preview2.srcObject = stream;
+                downloadButton2.href = stream;
+                preview2.captureStream = preview2.captureStream || preview2.mozCaptureStream;
+                return new Promise(resolve => preview2.onplaying = resolve);
+              }).then(() => startRecording2(preview2.captureStream(), recordingTimeMS2))
+              .then (recordedChunks => {
+                let recordedBlob = new Blob(recordedChunks, { type: "audio/mp3" });
+                recording2.src = URL.createObjectURL(recordedBlob);  
+                downloadButton2.href = recording2.src;
+                downloadButton2.download = "RecordedVideo.webm";
+
+                log2("Successfully recorded " + recordedBlob.size + " bytes of " +
+                    recordedBlob.type + " media.");
+              })
+              .catch(log);
+        }, false);
+
+
+        stopButton2.addEventListener("click", function() {
+        stop2(preview2.srcObject);
+        }, false);
+
+    </script>
+    
+    <br>
+    
+</html>
+
